@@ -1,0 +1,56 @@
+---
+title: "UMDI Community List"
+author: "Jerin Jacob"
+description: "List of places and corresponding zipcodes of the host community and surrounding communities of casinos in Massachusetts"
+date: "11/22/2022"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - community_list
+---
+
+```{r}
+#| label: setup
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(readxl)
+
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+##Loading the Data
+```{r}
+us_zipcodes <- read_excel("_data/USPS_zipcode_list.xls") %>%
+  filter(`PHYSICAL STATE` == "MA") %>%
+  select(`LOCALE NAME`, `PHYSICAL CITY`, `DELIVERY ZIPCODE`)
+  
+casino_community <- read_excel("_data/Host and Surrounding Community Crosswalk.xlsx", 
+    sheet = "Host and Surrounding Crosswalk") %>%
+  rename('PHYSICAL CITY' = 'town_Match')
+
+#Reading operator data
+
+#casino_list <- lapply(excel_sheets(""))
+
+```
+
+
+##Finding Community Zipcodes
+```{r}
+community_zipcode_list <- us_zipcodes %>%
+  left_join(casino_community,by="PHYSICAL CITY") %>%
+  filter(town != 'NA')
+community_zipcode_list
+```
+
+```{r}
+
+
+```
+
+

@@ -1,0 +1,64 @@
+---
+title: "UMDI Dummy Data"
+author: "Jerin Jacob"
+description: "Creating dummy data for testing UMDI Casino project"
+date: "12/2/2022"
+format:
+  html:
+    toc: true
+    code-fold: true
+    code-copy: true
+    code-tools: true
+categories:
+  - community_list
+---
+
+```{r}
+#| label: setup
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(readxl)
+
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+Casino A
+```{r}
+#CaseID <- rep(1:200)
+
+PaycheckDate <- rep(c("1/3/2020", "1/6/2020", "1/7/2020", "1/8/2020", "1/10/2020", "1/11/2020", "1/13/2020", "1/14/2020", "1/16/2020", "1/31/2020"), times = 20) #Create date column with 10 dates repating 20 times each. Total # of rows is 200.
+
+EEID <- rep(c(1:20), times = 10)
+
+ElcNumber <- rep(c(1001:1020), times = 10)
+
+JobTitle <- mutate(JobTitle = case_when(
+    EEID =="1" | EEID == "3" ~ "Recovered"
+    ))
+  #rep(c("VP REGIONAL MARKETING", "VP OF FINANCE", "BEVERAGE SERVER", "SLOT ATTENDANT", "MUTUELS TELLER"), times = 40)
+
+OrgLevel1 <- mutate(OrgLevel1 = case_when(
+    endsWith(ID, "R") ~ "Recovered",
+    endsWith(ID, "S") ~ "Sick"
+    ))
+  #rep(c("F&B PlainRidge", "Sales & Marketing", "Finance & Administration", "Casino Operations", "Racing", "Support Operations", "Human Resources", "G & A"), times = 25)
+
+OrgLevel2 <- rep(c("Accounting / Finance", "Accounting", "Floor Service Bar", "Floor Service"), times = 50)
+
+Full_PartTime <- rbinom(200, 1, 0.5)
+
+casinoA <- data.frame(CaseID, PaycheckDate, EEID, ElcNumber, JobTitle, OrgLevel1, OrgLevel2, Full_PartTime) %>%
+  mutate(Status = case_when(
+    endsWith(ID, "R") ~ "Recovered",
+    endsWith(ID, "S") ~ "Sick"
+    ))
+  #order(as.Date(casinoA$PaycheckDate, format="%m/%d/%Y"))
+
+casinoA
+
+#filter(casinoA, EEID == '1')
+
+```
+
